@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Plus_Jakarta_Sans, Instrument_Serif } from 'next/font/google'
 import { ThemeProvider } from '@/components/shared/theme-provider'
 import { Toaster } from 'sonner'
 import './globals.css'
@@ -8,6 +8,20 @@ const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-inter',
+})
+
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-plus-jakarta',
+})
+
+const instrumentSerif = Instrument_Serif({
+  weight: '400',
+  style: 'italic',
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-instrument-serif',
 })
 
 export const metadata: Metadata = {
@@ -37,7 +51,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className={inter.variable}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${plusJakarta.variable} ${instrumentSerif.variable}`}>
       <body className="font-sans">
         <ThemeProvider
           attribute="class"

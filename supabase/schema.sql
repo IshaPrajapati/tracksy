@@ -128,6 +128,16 @@ create table public.activity_logs (
   created_at timestamptz default now() not null
 );
 
+create table public.contact_messages (
+  id uuid default uuid_generate_v4() primary key,
+  name text not null,
+  email text not null,
+  company text,
+  message text not null,
+  created_at timestamptz default now() not null,
+  status text default 'unread' check (status in ('unread', 'read', 'archived'))
+);
+
 -- ============================================================
 -- 2. ENABLE ROW LEVEL SECURITY
 -- ============================================================
@@ -142,6 +152,7 @@ alter table public.comments enable row level security;
 alter table public.attachments enable row level security;
 alter table public.notifications enable row level security;
 alter table public.activity_logs enable row level security;
+alter table public.contact_messages enable row level security;
 
 -- ============================================================
 -- 3. HELPER FUNCTIONS (Avoids Infinite Recursion)
@@ -262,6 +273,10 @@ create policy "Project members can view activity" on public.activity_logs for se
   public.is_project_owner(project_id) or public.is_project_member(project_id)
 );
 create policy "Authenticated users can insert activity" on public.activity_logs for insert with check (auth.uid() = user_id);
+
+-- CONTACT MESSAGES
+create policy "Anyone can insert contact messages" on public.contact_messages for insert with check (true);
+create policy "Only authenticated users can view messages" on public.contact_messages for select using (auth.role() = 'authenticated');
 
 -- ============================================================
 -- 5. TRIGGERS
